@@ -23,15 +23,17 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import moment from "moment";
 
 const columns = [
-    { field: "id", headerName: "ID", headerClassName: "custom-header" },
-    { field: "title", headerName: "Title", headerClassName: "custom-header" },
-    { field: "type", headerName: "Type", headerClassName: "custom-header" },
+    { field: "id", headerName: "ID", headerClassName: "custom-header", width: 100, },
+    { field: "date", headerName: "Date", headerClassName: "custom-header", width: 150, },
+    { field: "title", headerName: "Title", headerClassName: "custom-header", width: 150, },
+    { field: "type", headerName: "Type", headerClassName: "custom-header", width: 100, },
     {
         field: "description",
         headerName: "description",
-        width: 130,
+        width: 200,
         headerClassName: "custom-header",
     },
+    { field: "amount", headerName: "Amount", headerClassName: "custom-header", width: 100, },
 ];
 
 const style = {
@@ -161,14 +163,15 @@ const Income = () => {
                 </div>
                 <div style={{ padding: "30px 30px" }}>
                     <DataGrid
+
                         rows={income}
                         columns={columns}
                         initialState={{
                             pagination: {
-                                paginationModel: { page: 0, pageSize: 5 },
+                                paginationModel: { page: 0, pageSize: 20 },
                             },
                         }}
-                        pageSizeOptions={[5, 10]}
+                        pageSizeOptions={[10, 20, 30, 40, 50]}
                     />
                 </div>
             </div>

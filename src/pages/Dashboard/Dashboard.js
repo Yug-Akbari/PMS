@@ -162,7 +162,7 @@ const Dashboard = () => {
       // Format the date to match the date format in the data array
       const formattedDate = date.format("L");
       // Find the data object corresponding to the current date in the data array
-      const dataForDate = data.find((item) => item.date === formattedDate);
+      const dataForDate = data.find((item) => moment(item.date).format() === moment(formattedDate).format());
       monthData[formattedDate] = dataForDate ? Number(dataForDate.amount) : 0;
     }
     stateValue(monthData);
@@ -227,7 +227,7 @@ const Dashboard = () => {
       },
       title: {
         display: true,
-        text: "Chart.js Line Chart",
+        text: "Income-Expense chart",
         font: { size: 25 },
       },
     },
@@ -283,7 +283,6 @@ const Dashboard = () => {
     labels: ["income", "expense"],
     datasets: [
       {
-        label: "# of Votes",
         data: [totalIncome, totalExpense],
         backgroundColor: ["rgba(255, 99, 132, 0.7)", "rgba(54, 162, 235, 0.7)"],
         borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)"],
@@ -300,7 +299,7 @@ const Dashboard = () => {
       },
       title: {
         display: true,
-        text: "Chart.js Pie Chart",
+        text: "Income-Expense chart",
       },
     },
   };
