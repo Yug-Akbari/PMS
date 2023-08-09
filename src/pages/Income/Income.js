@@ -116,7 +116,7 @@ const Income = () => {
         const categoryData = await firebaseGetSelectedDocs("category", id, value);
         setSelectedValue(categoryData);
         console.log(
-            "🚀 ~ file: Category.js:76 ~ getCategory ~ categoryData:akshay",
+            "🚀 ~ file: Category.js:76 ~ getCategory ~ categoryData",
             categoryData
         );
     };
@@ -124,7 +124,7 @@ const Income = () => {
     const getIncome = async (id) => {
         const incomeData = await firebaseGetDocs("income", id);
         setIncome(incomeData || []);
-        console.log("🚀 ~ file: Income.js:76 ~ getIncome ~ incomeData:akshay", incomeData)
+        console.log("🚀 ~ file: Income.js:76 ~ getIncome ~ incomeData", incomeData)
     };
     console.log(selectedValue);
     console.log(incomeData?.type);

@@ -13,8 +13,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   Chart as ChartJS,
   Chart as ChartJS1,
+  Chart as ChartJS2,
   CategoryScale,
   LinearScale,
+  BarElement,
   PointElement,
   LineElement,
   Title,
@@ -24,6 +26,17 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { Pie } from "react-chartjs-2";
+import { Bar } from 'react-chartjs-2';
+
+ChartJS2.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
 ChartJS1.register(ArcElement, Tooltip, Legend);
 ChartJS.register(
   CategoryScale,
@@ -61,17 +74,18 @@ const Dashboard = () => {
   const [incomeDatas, setIncomeDatas] = useState([]);
   const [expenseDatas, setExpenseDatas] = useState([]);
   const [selectedOption, setSelectedOption] = useState("");
+  const [onlyData, setOnlyData] = useState([])
   const [getAllValue, setGetAllValue] = useState(false);
   const startofvalue = selectedOption.slice(0, -1);
-  console.log(incomeData,"incomedata111")
-  console.log(newIncomeData,"newincomedata111sss")
+  console.log(expenseData, "expensedata")
+  console.log(onlyData, "onlyData")
   const getData = async (id) => {
     const incomeData1 = await firebaseGetDocs("income", id);
     const expenseData1 = await firebaseGetDocs("expense", id);
     setIncomeData(incomeData1);
     setExpenseData(expenseData1);
     setGetAllValue(true);
-};
+  };
   useEffect(() => {
     if (currentUser && currentUser.uid) {
       getData(currentUser.uid);
@@ -86,7 +100,7 @@ const Dashboard = () => {
     dateWiseAmountPlus(expenseData, setNewExpenseData);
   }, [getAllValue])
 
-  
+
   useEffect(() => {
     if (selectedOption == "weeks") {
       printWeekData(date, newIncomeData, setIncomeDatas);
@@ -98,7 +112,7 @@ const Dashboard = () => {
       printTotalDataMonthWise(newIncomeData, targetYear, setIncomeDatas);
       printTotalDataMonthWise(newExpenseData, targetYear, setExpenseDatas);
     }
-  }, [selectedOption,date,newIncomeData,newExpenseData]);
+  }, [selectedOption, date, newIncomeData, newExpenseData]);
 
   //1.date wise  amount plus
   function dateWiseAmountPlus(data, stateValue) {
@@ -127,6 +141,7 @@ const Dashboard = () => {
     const endOfWeek = targetDate.clone().endOf("week");
     // Initialize an object to store the data for each day of the week
     const weekData = {};
+    const dateWiseData = []
     // Iterate over the range of dates for the week
     for (
       let date = startOfWeek.clone();
@@ -136,7 +151,13 @@ const Dashboard = () => {
       // Format the date to match the date format in the data array
       const formattedDate = date.format("L");
       // Find the data object corresponding to the current date in the data array
-      const dataForDate = data.find((item) => item.date === formattedDate);
+      const dataForDate = data.find((item) => item.date === formattedDate)
+      console.log(dataForDate, "gfcdwhjks")
+      if (dataForDate) {
+        dateWiseData.push(dataForDate)
+      }
+      setOnlyData(dateWiseData)
+      console.log(dateWiseData, "gfdchjknidekhfenuirehrej")
       setTimeout(() => {
         weekData[formattedDate] = dataForDate ? Number(dataForDate.amount) : 0;
         stateValue(weekData);
@@ -144,7 +165,7 @@ const Dashboard = () => {
       }, 500);
     }
   }
-  //month wise data=========================
+  //3.month wise data=========================
   function printMonthData(inputDate, data, stateValue) {
     // Convert the input date to a Moment.js object
     const targetDate = moment(inputDate, "L");
@@ -153,6 +174,7 @@ const Dashboard = () => {
     const endOfMonth = targetDate.clone().endOf("month");
     // Initialize an object to store the data for each day of the month
     const monthData = {};
+    const dateWiseData = []
     // Iterate over the range of dates for the month
     for (
       let date = startOfMonth.clone();
@@ -163,16 +185,19 @@ const Dashboard = () => {
       const formattedDate = date.format("L");
       // Find the data object corresponding to the current date in the data array
       const dataForDate = data.find((item) => moment(item.date).format() === moment(formattedDate).format());
+      dateWiseData.push(dataForDate)
+      setOnlyData(dateWiseData)
+      console.log(onlyData, "monthwisedatadtada")
       monthData[formattedDate] = dataForDate ? Number(dataForDate.amount) : 0;
     }
     stateValue(monthData);
   }
-  //year wise data=======================
+  //4.year wise data=======================
   const targetYear = moment(date).format("YYYY");
   function printTotalDataMonthWise(data, targetYear, stateValue) {
     // Create an object to store the total data for each month
     const totalDataMonthWise = {};
-
+    const dateWiseData = []
     // Initialize the total amount for each month as 0
     for (let month = 1; month <= 12; month++) {
       totalDataMonthWise[month] = 0;
@@ -186,6 +211,10 @@ const Dashboard = () => {
       if (itemYear === parseInt(targetYear, 10)) {
         const itemMonth = itemDate.month() + 1; // Moment.js months are 0-indexed
         totalDataMonthWise[itemMonth] += Number(item.amount);
+        dateWiseData.push(item)
+        setOnlyData(dateWiseData)
+        console.log(onlyData, "asdfghjkl")
+
       }
     });
     stateValue(totalDataMonthWise);
@@ -193,7 +222,7 @@ const Dashboard = () => {
   const propertyValues1 = Object.values(incomeDatas);
   console.log(propertyValues1, "propertyValues1");
   const propertyValues2 = Object.values(expenseDatas);
-  console.log(propertyValues2);
+  console.log(propertyValues2, "proorirorirnddij");
 
   const totalIncome = propertyValues1.reduce((accumulator, currentValue) => {
     return accumulator + currentValue;
@@ -217,7 +246,7 @@ const Dashboard = () => {
       Chartlabel.push(moment(element).format("MMM Do"));
     }
   });
-
+  //line chart
   const lineChartOptions = {
     responsive: true,
     plugins: {
@@ -279,6 +308,7 @@ const Dashboard = () => {
       },
     ],
   };
+  //piechart
   const pieChartData = {
     labels: ["income", "expense"],
     datasets: [
@@ -303,7 +333,72 @@ const Dashboard = () => {
       },
     },
   };
+  //stack chart expense
 
+  function removeDuplicates(arr) {
+    const uniqueArray = [];
+    for (let item of arr) {
+      const { type } = item;
+      if (!uniqueArray.includes(type)) {
+        uniqueArray.push(type);
+      }
+    }
+    return uniqueArray;
+  }
+  const uniqueData = removeDuplicates(expenseData);
+  console.log(uniqueData, "uniqueData");
+  const options12 = {
+    plugins: {
+      title: {
+        display: true,
+        text: 'Expense-Category chart',
+      },
+    },
+    responsive: true,
+    scales: {
+      x: {
+        stacked: true,
+      },
+      y: {
+        stacked: true,
+      },
+    },
+  };
+  // const newData = onlyData.filter(item => item !== undefined).concat(Array(onlyData.filter(item => item === undefined).length).fill({ type: "novalue" }));
+  // console.log(newData);
+  // const parthAmounts = newData.filter(item => item.type === 'parth').map(item => item.amount);
+  // console.log(parthAmounts, "ytefgtiurhfiuhfriur");
+  // weekData[formattedDate] = dataForDate ? Number(dataForDate.amount) : 0;
+
+  //Random color==================
+  const generateRandomColor = (existingColors) => {
+    let color;
+    do { color = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0'); }
+    while (existingColors.includes(color));
+    return color;
+  };
+
+  const existingColors = [];
+
+  for (let i = 0; i < uniqueData.length; i++) {
+    const randomColor = generateRandomColor(existingColors);
+    existingColors.push(randomColor);
+    console.log(randomColor);
+  }
+
+  console.log(Chartlabel, "Chartlabel")
+  // if (newData.length) {
+
+  let result = onlyData.reduce(function (r, a) {
+    r[a.date] = r[a.date] || [];
+    r[a.date].push(a);
+    return r;
+  }, Object.create(null));
+  console.log(result, "group group")
+  // }
+
+
+  /////
   //onclick
   function handlePlusClick(date) {
     const updatedDate = moment(date, "MM/DD/YYYY")
@@ -322,10 +417,70 @@ const Dashboard = () => {
     console.log(updatedDate, "data");
   }
 
+  ////
+  function mergeAndSumAmountByDateAndType(data) {
+    const mergedData = {};
+
+    data.forEach(item => {
+      const { date, type, amount } = item;
+      const key = `${date}-${type}`;
+
+      if (!mergedData[key]) {
+        mergedData[key] = {
+          date,
+          type,
+          totalAmount: 0
+        };
+      }
+
+      mergedData[key].totalAmount += parseInt(amount);
+    });
+
+    return Object.values(mergedData);
+  }
+  const mergedAndSummedData = mergeAndSumAmountByDateAndType(expenseData);
+
+  console.log(mergedAndSummedData, "mergedAndSummedData");
+  //<=--------------------------
+  function mergeAndSumAmountByDate(data) {
+    const dateMap = new Map();
+    for (const entry of data) {
+      const { date, totalAmount } = entry;
+      const existingEntry = dateMap.get(date);
+      if (existingEntry) {
+        existingEntry.totalAmount += parseInt(totalAmount);
+      } else {
+        dateMap.set(date, { ...entry, totalAmount: parseInt(totalAmount) });
+      }
+    }
+    const newData = Array.from(dateMap.values());
+
+    return newData;
+  }
+
+  const mergedAndSummedData1 = mergeAndSumAmountByDate(mergedAndSummedData);
+const sample = (data)=>{
+
+}
+  console.log(mergedAndSummedData1);
+  //////
+  console.log(uniqueData, "onlyDataonlyDataonlyDataonlyData")
+  const data11 = {
+    labels: Chartlabel,
+    datasets: uniqueData.map((label, index) => {
+      console.log(mergedAndSummedData.filter(item => item.type === label), "mergedAndSummedData.filter(item => item.type === label)")
+      return (
+        {
+          label,
+          data: mergedAndSummedData.filter(item => item.type === label).map(item => item.totalAmount),
+          backgroundColor: existingColors[index]
+        })
+    }),
+  };
   return (
     <>
       <Navbar />
-      {(getAllValue) ? 
+      {(getAllValue) ?
         <>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
@@ -432,16 +587,20 @@ const Dashboard = () => {
           <Grid container spacing={2}>
             <Grid item xs={1} md={1}></Grid>
             <Grid item xs={5} md={5}>
-              <Line options={lineChartOptions} data={lineChartData} />;
+              <Line options={lineChartOptions} data={lineChartData} />
             </Grid>
             <Grid item xs={1} md={1}></Grid>
             <Grid item xs={4} md={4}>
               <Pie data={pieChartData} options={pieChartOptions} />
             </Grid>
+            <Grid item xs={4} md={4}>
+              <Bar options={options12} data={data11} />
+
+            </Grid>
           </Grid>
         </>
-       : 
-      <div>loading...</div>
+        :
+        <div>loading...</div>
       }
     </>
   );

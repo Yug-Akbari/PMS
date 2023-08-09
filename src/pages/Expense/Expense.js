@@ -116,7 +116,7 @@ const Expense = () => {
     const categoryData = await firebaseGetSelectedDocs("category", id, value);
     setSelectedValue(categoryData);
     console.log(
-      "🚀 ~ file: Category.js:76 ~ getCategory ~ categoryData:akshay",
+      "🚀 ~ file: Category.js:76 ~ getCategory ~ categoryData:",
       categoryData
     );
   };
@@ -125,7 +125,7 @@ const Expense = () => {
     const expenseData = await firebaseGetDocs("expense", id);
     console.log("🚀 ~ file: Expense.js:124 ~ getExpense ~ expenseData:", expenseData)
     setExpense(expenseData || []);
-    // console.log("🚀 ~ file: Expense.js:76 ~ getExpense ~ expenseData:akshay", expenseData)
+    // console.log("🚀 ~ file: Expense.js:76 ~ getExpense ~ expenseData:", expenseData)
   };
   console.log(selectedValue);
   console.log(expenseData?.type);

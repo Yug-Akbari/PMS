@@ -76,7 +76,7 @@ const Category = () => {
     const getCategory = async () => {
         const categoryData = await firebaseGetDocs("category", currentUser.uid)
         setCategory(categoryData)
-        console.log("🚀 ~ file: Category.js:76 ~ getCategory ~ categoryData:akshay", categoryData)
+        console.log("🚀 ~ file: Category.js:76 ~ getCategory ~ categoryData:", categoryData)
     }
 
 
