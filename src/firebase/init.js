@@ -4,7 +4,6 @@ import { getAuth } from 'firebase/auth'
 import { getStorage } from 'firebase/storage'
 import config from './config'
 
-
 let firebaseApp
 
 if (!getApps().length) {
