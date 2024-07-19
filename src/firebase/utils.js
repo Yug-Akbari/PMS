@@ -1,10 +1,23 @@
-import { firebaseAuth, firebaseDb } from './init'
+import { firebaseAuth, firebaseDb, firebaseStorage } from './init'
 import {
+  addDoc,
+  collection,
   doc,
   getDoc,
   setDoc,
+  add,
+  getDocs,
+  query,
+  where
 } from 'firebase/firestore'
-
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  deleteObject,
+  getDownloadURL,
+  uploadString,
+} from 'firebase/storage'
 import {
   createUserWithEmailAndPassword,
   setPersistence,
@@ -14,7 +27,8 @@ import {
 } from 'firebase/auth'
 import { setUserData, setAuthenticated, setUserPending } from '../redux/slices/user'
 import store from '../redux/store/index'
-
+import { storageBucketUrl } from './config'
+import { v4 as uuidv4 } from 'uuid'
 
 
 export const firebaseGetUserInfoFromDb = async (id) => {
@@ -38,6 +52,8 @@ const firebaseRegister = async (data) => {
       const user = createUserWithEmailAndPassword(firebaseAuth, email, password).then(
         async ({ user }) => {
           if (user) {
+            // store.dispatch(setMnemonicPopup(true))
+            // store.dispatch(setAuthenticated(!!user))
             const infos = {
               displayName: name,
               name: name,
@@ -56,7 +72,15 @@ const firebaseRegister = async (data) => {
     throw error
   }
 }
+const firebaseSetDoc = async (dbName, data) => {
+  try {
+    const dbRef = doc(collection(firebaseDb, dbName));
+    await setDoc(dbRef, data);
 
+  } catch (err) {
+    throw err
+  }
+}
 
 const firebaseGetCollectionWithId = async (id, collection) => {
   try {
@@ -67,6 +91,42 @@ const firebaseGetCollectionWithId = async (id, collection) => {
     console.error(error)
   }
 }
+
+const firebaseGetDocs = async (db, uid) => {
+  try {
+    const nftsRef = collection(firebaseDb, db)
+    const queryRef = query(nftsRef, where('uid', '==', uid))
+    const documentSnapshots = await getDocs(queryRef)
+
+    const data = documentSnapshots.docs.map((doc) => {
+      return { ...doc.data(), id: doc.id }
+    })
+    console.log("🚀 ~ file: utils.js:104 ~ data ~ data:", data)
+    return data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const firebaseGetSelectedDocs = async (db, uid, value) => {
+  try {
+    const nftsRef = collection(firebaseDb, db)
+    const queryRef = query(nftsRef, where('uid', '==', uid))
+    const documentSnapshots = await getDocs(queryRef)
+
+    const data = documentSnapshots.docs.map((doc) => {
+      return { ...doc.data(), id: doc.id }
+    })
+    const filterData = data.filter(check => check.type === value);
+    return filterData
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+
+
+
 
 const firebaseGetAuthorizedUser = () => {
   const fn = firebaseAuth.onAuthStateChanged(async (userResponse) => {
@@ -132,7 +192,11 @@ const firebaseLogin = async ({
   return user
 }
 export {
+
   firebaseRegister,
   firebaseLogin,
+  firebaseSetDoc,
+  firebaseGetDocs,
   firebaseGetAuthorizedUser,
+  firebaseGetSelectedDocs
 }

@@ -58,7 +58,7 @@ export default function Register() {
                 const registerUser = await firebaseRegister(tempData)
                 if (registerUser) {
                     toast.success("An account has been created successfully.", toastConfig)
-                    
+                    navigate("/expense")
                 }
 
             } catch (err) {
