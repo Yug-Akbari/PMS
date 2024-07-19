@@ -43,6 +43,30 @@ const Navbar = () => {
         textColor="primary"
         style={{paddingTop:"20px", justifyContent: "center" }}
       >
+        <Tab
+          value="/income"
+          label="Income"
+          component={Link}
+          to="/income"
+          className={classes.tab}
+          sx={{ justifyContent: "center" }}
+        />
+        <Tab
+          value="/expense"
+          label="Expense"
+          component={Link}
+          to="/expense"
+          className={classes.tab}
+          sx={{ justifyContent: "center" }}
+        />
+        <Tab
+          value="/category"
+          label="Category"
+          component={Link}
+          to="/category"
+          className={classes.tab}
+          sx={{ justifyContent: "center" }}
+        />
       </Tabs>
     </AppBar>
   );
