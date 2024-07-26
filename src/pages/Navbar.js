@@ -44,6 +44,14 @@ const Navbar = () => {
         style={{paddingTop:"20px", justifyContent: "center" }}
       >
         <Tab
+          value="/dashboard"
+          label="Home"
+          component={Link}
+          to="/dashboard"
+          className={classes.tab}
+          sx={{ justifyContent: "center" }} // Center the label horizontally
+        />
+        <Tab
           value="/income"
           label="Income"
           component={Link}

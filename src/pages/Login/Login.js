@@ -43,7 +43,7 @@ export default function Login() {
                 const loginUser = await firebaseLogin(loginData)
                 if (loginUser) {
                     toast.success("user logged in successfully", toastConfig)
-                    navigate("/expense")
+                    navigate("/dashboard")
                 }
 
             } catch (err) {
@@ -54,7 +54,7 @@ export default function Login() {
         }
     };
     const Submit = () => {
-        window.location = '/expense'
+        window.location = '/dashboard'
     }
 
     return (
