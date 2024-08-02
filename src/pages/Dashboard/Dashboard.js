@@ -27,7 +27,6 @@ import {
 import { Line } from "react-chartjs-2";
 import { Pie } from "react-chartjs-2";
 import { Bar } from 'react-chartjs-2';
-import { Container } from "@mui/material";
 
 ChartJS2.register(
   CategoryScale,
@@ -50,7 +49,8 @@ ChartJS.register(
 );
 const useStyles = makeStyles((theme) => ({
   card: {
-    width: "100%",
+    width: 400,
+    margin: theme.spacing(2),
     boxShadow: "0px 2px 4px rgba(255, 0, 0, 0.5)", // Customize the box shadow color
   },
   cardContent: {
@@ -391,6 +391,7 @@ const Dashboard = () => {
 
 
 
+
   /////
   //onclick
   function handlePlusClick(date) {
@@ -511,9 +512,9 @@ const sample = (data)=>{
             </div>
           </div>
 
-          <div className=""  style={{ paddingTop: "30px" }}>
-            <Grid container justifyContent="space-between">
-              <Grid item xs={4} md={3}>
+          <div className="" style={{ paddingTop: "30px" }}>
+            <Grid container justifyContent="center" spacing={6}>
+              <Grid item>
                 <Card className={classes.card}>
                   <CardContent className={classes.cardContent}>
                     <div
@@ -533,7 +534,7 @@ const sample = (data)=>{
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={4} md={3}>
+              <Grid item>
                 <Card className={classes.card}>
                   <CardContent className={classes.cardContent}>
                     <div
@@ -553,7 +554,7 @@ const sample = (data)=>{
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={4} md={3}>
+              <Grid item>
                 <Card className={classes.card}>
                   <CardContent className={classes.cardContent}>
                     <div
@@ -576,22 +577,21 @@ const sample = (data)=>{
             </Grid>
           </div>
           <div></div>
-<Container>
+
           <Grid container spacing={2}>
-            {/* <Grid item xs={1} md={1}></Grid> */}
-            <Grid item xs={6} md={6}>
+            <Grid item xs={1} md={1}></Grid>
+            <Grid item xs={5} md={5}>
               <Line options={lineChartOptions} data={lineChartData} />
             </Grid>
-            {/* <Grid item xs={1} md={1}></Grid> */}
-            <Grid item xs={6} md={6}>
+            <Grid item xs={1} md={1}></Grid>
+            <Grid item xs={4} md={4}>
               <Pie data={pieChartData} options={pieChartOptions} />
             </Grid>
-            <Grid item xs={6} md={6}>
+            <Grid item xs={4} md={4}>
               <Bar options={options12} data={data11} />
 
             </Grid>
           </Grid>
-          </Container>
         </>
         :
         <div>loading...</div>
